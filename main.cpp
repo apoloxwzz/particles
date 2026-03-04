@@ -29,14 +29,14 @@ int main()
 {
     if (SDL_Init(SDL_INIT_VIDEO) != 0)
     {
-        cout << "Erro ao inicializar SDL: " << SDL_GetError() << endl;
+        cout << "SDL error: " << SDL_GetError() << endl;
         return 1;
     }
 
     const int SCREEN_WIDTH = 1920;
     const int SCREEN_HEIGHT = 1080;
 
-    SDL_Window *window = SDL_CreateWindow("Partículas Flutuantes com Fade",
+    SDL_Window *window = SDL_CreateWindow("Particles",
                                           SDL_WINDOWPOS_CENTERED,
                                           SDL_WINDOWPOS_CENTERED,
                                           SCREEN_WIDTH,
@@ -68,13 +68,12 @@ int main()
         }
 
         frame++;
-
-        // Geração de novas partículas
+        
         if (particles.size() < 80)
         {
             int numNew = 1 + rand() % 2;
             for (int n = 0; n < numNew; n++)
-            {
+            {    
                 Particle p;
                 p.x = rand() % SCREEN_WIDTH;
                 p.y = rand() % SCREEN_HEIGHT;
@@ -91,7 +90,6 @@ int main()
             }
         }
 
-        // Atualiza posições com flutuação suave
         for (auto &p : particles)
         {
             p.x += p.vx;
@@ -106,11 +104,9 @@ int main()
             p.y += cos(frame * 0.05 + p.phaseY) * 0.5;
         }
 
-        // Limpa conexões antigas
         for (auto &c : connections)
             c.second.clear();
 
-        // Cria conexões (máx 2 por partícula)
         for (size_t i = 0; i < particles.size(); i++)
         {
             Particle &p1 = particles[i];
@@ -132,11 +128,9 @@ int main()
             }
         }
 
-        // Limpa fundo
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
-        // Desenha conexões com fade baseado na distância
         for (auto &c : connections)
         {
             int id1 = c.first;
@@ -164,7 +158,6 @@ int main()
             }
         }
 
-        // Desenha partículas (raio 2)
         for (auto &p : particles)
         {
             SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
